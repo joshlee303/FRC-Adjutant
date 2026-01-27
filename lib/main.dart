@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:frc_adjutant/data_library.dart';
 
 void main() { 
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -224,14 +226,7 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                       },
                       icon: const Icon(Icons.home)),
               ),
-              body: Center( //TODO: Replace with actual data libraries content
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text('Data Libraries Go Here'),
-                  ],
-                ),
-              ),
+              body: DataLibrary() // Spawns the main data library page
             )
           else
             const SizedBox(),
