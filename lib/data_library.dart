@@ -6,21 +6,31 @@ import 'package:dartframe/dartframe.dart';
 import 'package:file_picker/file_picker.dart';
 
 class DataLibrary extends StatefulWidget {
-  const DataLibrary({Key? key}) : super(key: key);
+  final Map<String, dynamic> libraryOne;
+
+  const DataLibrary({
+    super.key,
+    required this.libraryOne
+  });
 
   @override
   _DataLibraryState createState() => _DataLibraryState(); 
 }
 
 class _DataLibraryState extends State<DataLibrary> {
-  Future<DataFrame>? testLibrary;
+  // Future<DataFrame>? testLibrary;
+  DataFrame? testLibrary;
 
   void uploadFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(); // Opens the file picker window
 
     if (result != null && result.files.single.path != null) {
       final df = await File(result.files.single.path!);
-      testLibrary = FileReader.readCsv(df.path); // Test Library assignment
+      
+      final intermediary = await FileReader.readCsv(df.path); // Test Library assignment
+      setState(() {
+        testLibrary = intermediary;
+      });
     } else {
       // User canceled the picker
     }
@@ -32,21 +42,19 @@ class _DataLibraryState extends State<DataLibrary> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          FilledButton( // File selection button
-            onPressed: uploadFile, 
-            child: const Text('Upload a CSV')
+          Flexible(
+            child: FilledButton( // File selection button
+              onPressed: uploadFile, 
+              child: const Text('Upload a CSV')
+            )
           ),
           const SizedBox(height: 12),
-          testLibrary == null
-           ? const Text('No file uploaded')
-           : Expanded(
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: SingleChildScrollView(
-                  child: Text(testLibrary.toString()),
-                ),
-              ),
-            )
+          if (testLibrary == null)
+            Text('No file uploaded')
+          else
+          Expanded(
+            child: Text(testLibrary.toString())
+          )
         ],
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frc_adjutant/data_library.dart';
+import 'package:frc_adjutant/data_maps.dart';
 
 void main() { 
   WidgetsFlutterBinding.ensureInitialized();
@@ -48,6 +49,8 @@ class MyHomePage extends StatefulWidget { // Stateful because the app mode chang
 class _MyHomePageState extends State<MyHomePage> { // This is the state for the main page
   int appMode = 0;
 
+  Map<String, dynamic> libraryOne = getLibraryOne();  
+  
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called
@@ -226,7 +229,7 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                       },
                       icon: const Icon(Icons.home)),
               ),
-              body: DataLibrary() // Spawns the main data library page
+              body: DataLibrary(libraryOne: getLibraryOne(),) // Spawns the main data library page
             )
           else
             const SizedBox(),
