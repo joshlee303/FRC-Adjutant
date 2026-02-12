@@ -48,8 +48,9 @@ class MyHomePage extends StatefulWidget { // Stateful because the app mode chang
 
 class _MyHomePageState extends State<MyHomePage> { // This is the state for the main page
   int appMode = 0;
+  int libraryPageIndex = 0;
 
-  Map<String, dynamic> libraryOne = getLibraryOne();  
+  Map<String, dynamic> libraries = getLibraries();  
   
   @override
   Widget build(BuildContext context) {
@@ -225,11 +226,106 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                       onPressed: () {
                         setState(() {
                           appMode = 0;
+                          libraryPageIndex = 0;
                         });
                       },
                       icon: const Icon(Icons.home)),
               ),
-              body: DataLibrary(libraryOne: getLibraryOne(),) // Spawns the main data library page
+              bottomNavigationBar: NavigationBar(
+                  destinations: const <NavigationDestination>[
+                    NavigationDestination(
+                      icon: Icon(Icons.list_sharp),
+                      label: 'Library One',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.list_sharp),
+                      label: 'Library Two',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.list_sharp),
+                      label: 'Library Three',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.list_sharp),
+                      label: 'Library Four',
+                    ),
+                    NavigationDestination(
+                      icon: Icon(Icons.list_sharp),
+                      label: 'Library Five',
+                    )
+                  ],
+                  selectedIndex: libraryPageIndex,
+                  onDestinationSelected: (int index) {
+                    setState(() {
+                      libraryPageIndex = index;
+                    });
+                  },
+                ),
+              body: IndexedStack(
+                index: libraryPageIndex,
+                children: [
+                  if (libraryPageIndex == 0)
+                    DataLibrary(
+                      libraries: libraries, 
+                      name: "libraryOne",
+                      onDataChanged: (data) {
+                        data.forEach((k, v) {
+                          libraries[k] = v;
+                        });
+                      },
+                    )
+                  else
+                    const SizedBox(),
+                  if (libraryPageIndex == 1)
+                    DataLibrary(
+                      libraries: libraries, 
+                      name: "libraryTwo",
+                      onDataChanged: (data) {
+                        data.forEach((k, v) {
+                          libraries[k] = v;
+                        });
+                      },
+                    )
+                  else
+                    const SizedBox(),
+                  if (libraryPageIndex == 2)
+                    DataLibrary(
+                      libraries: libraries, 
+                      name: "libraryThree",
+                      onDataChanged: (data) {
+                        data.forEach((k, v) {
+                          libraries[k] = v;
+                        });
+                      },
+                    )
+                  else
+                    const SizedBox(),
+                  if (libraryPageIndex == 3)
+                    DataLibrary(
+                      libraries: libraries, 
+                      name: "libraryFour",
+                      onDataChanged: (data) {
+                        data.forEach((k, v) {
+                          libraries[k] = v;
+                        });
+                      },
+                    )
+                  else
+                    const SizedBox(),
+                  if (libraryPageIndex == 4)
+                    DataLibrary(
+                      libraries: libraries, 
+                      name: "libraryFive",
+                      onDataChanged: (data) {
+                        data.forEach((k, v) {
+                          libraries[k] = v;
+                        });
+                      },
+                    )
+                  else
+                    const SizedBox(),
+                ],
+              ) // Spawns the main data library page
             )
           else
             const SizedBox(),
@@ -251,6 +347,7 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     const Text('Data Visualizers Go Here'),
+                    Text(libraries["libraryOne"].toString())
                   ],
                 ),
               ),

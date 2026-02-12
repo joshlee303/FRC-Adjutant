@@ -4,13 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:dartframe/dartframe.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:frc_adjutant/widgets.dart';
 
 class DataLibrary extends StatefulWidget {
-  final Map<String, dynamic> libraryOne;
+  final Map<String, dynamic> libraries;
+  final String name;
+  final Function(Map<String, dynamic>) onDataChanged;
 
   const DataLibrary({
     super.key,
-    required this.libraryOne
+    required this.libraries,
+    required this.name,
+    required this.onDataChanged
   });
 
   @override
@@ -18,7 +23,6 @@ class DataLibrary extends StatefulWidget {
 }
 
 class _DataLibraryState extends State<DataLibrary> {
-  // Future<DataFrame>? testLibrary;
   DataFrame? testLibrary;
 
   void uploadFile() async {
@@ -30,6 +34,7 @@ class _DataLibraryState extends State<DataLibrary> {
       final intermediary = await FileReader.readCsv(df.path); // Test Library assignment
       setState(() {
         testLibrary = intermediary;
+        widget.onDataChanged({widget.name: testLibrary});
       });
     } else {
       // User canceled the picker
@@ -49,12 +54,21 @@ class _DataLibraryState extends State<DataLibrary> {
             )
           ),
           const SizedBox(height: 12),
-          if (testLibrary == null)
+          if (widget.libraries[widget.name] == null || widget.libraries[widget.name].columnCount == 0)
             Text('No file uploaded')
           else
-          Expanded(
-            child: Text(testLibrary.toString())
-          )
+            // Expanded(
+            //   child: Padding(
+            //     padding: EdgeInsets.all(16),
+            //       // child: Text(testLibrary.toString())
+            //       child: DataSheet(
+            //         dataMap: widget.libraries[widget.name], 
+            //     )
+            //   )
+            // )
+            DataSheet(
+              dataMap: widget.libraries[widget.name]
+            ), 
         ],
       ),
     );

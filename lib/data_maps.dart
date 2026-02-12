@@ -1,10 +1,14 @@
 // This file is for storing data from the libraries in order to allow it to be used across
 // the library and visualizer pages.
 
-Map<String, dynamic> getLibraryOne() {
+import 'package:dartframe/dartframe.dart';
+
+Map<String, dynamic> getLibraries() {
   return {
-    "dataframe": null,
-    "columnCount": 0,
-    "rowCount": 0
+    "libraryOne": DataFrame.empty(),
+    "libraryTwo": DataFrame.empty(),
+    "libraryThree": DataFrame.empty(),
+    "libraryFour": DataFrame.empty(),
+    "libraryFive": DataFrame.empty(),
   };
 }
