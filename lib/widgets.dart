@@ -9,10 +9,12 @@ import 'package:file_picker/file_picker.dart';
 
 class DataSheet extends StatefulWidget {
   final DataFrame dataMap;
+  final String name;
 
   const DataSheet({
     super.key,
     required this.dataMap,
+    required this.name
   });
 
   @override
@@ -73,7 +75,7 @@ class _DataSheetState extends State<DataSheet> {
             setState(() {
               final intValue = int.tryParse(value);
               frame.column(columnIndex).setValue([rowIndex], intValue);
-              widget.dataMap["libraryOne"] = frame;
+              widget.dataMap[widget.name] = frame;
             });
           },
           controller: _getController(columnIndex, rowIndex, false),
@@ -101,7 +103,7 @@ class _DataSheetState extends State<DataSheet> {
             setState(() {
               final intValue = int.tryParse(value);
               frame.column(columnIndex).setValue([rowIndex], intValue);
-              widget.dataMap["libraryOne"] = frame;
+              widget.dataMap[widget.name] = frame;
             });
           },
           controller: _getController(columnIndex, rowIndex, false),
@@ -123,7 +125,7 @@ class _DataSheetState extends State<DataSheet> {
           onChanged: (value) {
             setState(() {
               frame.column(columnIndex).setValue([rowIndex], value);
-              widget.dataMap["libraryOne"] = frame;
+              widget.dataMap[widget.name] = frame;
             });
           },
           controller: _getController(columnIndex, rowIndex, false),
@@ -241,7 +243,7 @@ class _DataSheetState extends State<DataSheet> {
     //                           setState(() {
     //                             final intValue = int.tryParse(value);
     //                             frame.column(columnIndex).setValue([rowIndex], intValue);
-    //                             widget.dataMap["libraryOne"] = frame;
+    //                             widget.dataMap[widget.name] = frame;
     //                           });
     //                         },
     //                         controller: _getController(columnIndex, rowIndex, false),
@@ -268,7 +270,7 @@ class _DataSheetState extends State<DataSheet> {
     //                           setState(() {
     //                             final intValue = int.tryParse(value);
     //                             frame.column(columnIndex).setValue([rowIndex], intValue);
-    //                             widget.dataMap["libraryOne"] = frame;
+    //                             widget.dataMap[widget.name] = frame;
     //                           });
     //                         },
     //                         controller: _getController(columnIndex, rowIndex, false),
@@ -289,7 +291,7 @@ class _DataSheetState extends State<DataSheet> {
     //                         onChanged: (value) {
     //                           setState(() {
     //                             frame.column(columnIndex).setValue([rowIndex], value);
-    //                             widget.dataMap["libraryOne"] = frame;
+    //                             widget.dataMap[widget.name] = frame;
     //                           });
     //                         },
     //                         controller: _getController(columnIndex, rowIndex, false),
