@@ -235,23 +235,19 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                   destinations: const <NavigationDestination>[
                     NavigationDestination(
                       icon: Icon(Icons.list_sharp),
-                      label: 'Library One',
+                      label: 'Pit One',
                     ),
                     NavigationDestination(
                       icon: Icon(Icons.list_sharp),
-                      label: 'Library Two',
+                      label: 'Match One',
                     ),
                     NavigationDestination(
                       icon: Icon(Icons.list_sharp),
-                      label: 'Library Three',
+                      label: 'Pit Two',
                     ),
                     NavigationDestination(
                       icon: Icon(Icons.list_sharp),
-                      label: 'Library Four',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.list_sharp),
-                      label: 'Library Five',
+                      label: 'Match Two',
                     )
                   ],
                   selectedIndex: libraryPageIndex,
@@ -267,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                   if (libraryPageIndex == 0)
                     DataLibrary(
                       libraries: libraries, 
-                      name: "libraryOne",
+                      name: "pitOne",
                       onDataChanged: (data) {
                         data.forEach((k, v) {
                           libraries[k] = v;
@@ -279,7 +275,7 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                   if (libraryPageIndex == 1)
                     DataLibrary(
                       libraries: libraries, 
-                      name: "libraryTwo",
+                      name: "matchOne",
                       onDataChanged: (data) {
                         data.forEach((k, v) {
                           libraries[k] = v;
@@ -291,7 +287,7 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                   if (libraryPageIndex == 2)
                     DataLibrary(
                       libraries: libraries, 
-                      name: "libraryThree",
+                      name: "pitTwo",
                       onDataChanged: (data) {
                         data.forEach((k, v) {
                           libraries[k] = v;
@@ -303,19 +299,7 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                   if (libraryPageIndex == 3)
                     DataLibrary(
                       libraries: libraries, 
-                      name: "libraryFour",
-                      onDataChanged: (data) {
-                        data.forEach((k, v) {
-                          libraries[k] = v;
-                        });
-                      },
-                    )
-                  else
-                    const SizedBox(),
-                  if (libraryPageIndex == 4)
-                    DataLibrary(
-                      libraries: libraries, 
-                      name: "libraryFive",
+                      name: "matchTwo",
                       onDataChanged: (data) {
                         data.forEach((k, v) {
                           libraries[k] = v;

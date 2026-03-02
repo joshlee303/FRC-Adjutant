@@ -5,10 +5,9 @@ import 'package:dartframe/dartframe.dart';
 
 Map<String, dynamic> getLibraries() {
   return {
-    "libraryOne": DataFrame.empty(),
-    "libraryTwo": DataFrame.empty(),
-    "libraryThree": DataFrame.empty(),
-    "libraryFour": DataFrame.empty(),
-    "libraryFive": DataFrame.empty(),
+    "pitOne": DataFrame.empty(),
+    "matchOne": DataFrame.empty(),
+    "pitTwo": DataFrame.empty(),
+    "matchTwo": DataFrame.empty(),
   };
 }

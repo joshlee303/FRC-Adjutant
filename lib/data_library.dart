@@ -42,24 +42,24 @@ class _DataLibraryState extends State<DataLibrary> {
     }
   }
 
-  void uploadCBOR() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
+  // void uploadCBOR() async {
+  //   FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-    if (result != null && result.files.single.path != null) {
-      final df = await File(result.files.single.path!);
+  //   if (result != null && result.files.single.path != null) {
+  //     final df = await File(result.files.single.path!);
 
-      final list = await df.readAsBytes();
+  //     final list = await df.readAsBytes();
       
-      final intermediary = DataFrame.fromNames(cbor.decode(list.toList()) as List<Object?>); // Test Library assignment
+  //     final intermediary = DataFrame.fromNames(cbor.decode(list.toList()) as List<Object?>); // Test Library assignment
 
-      setState(() {
-        testLibrary = intermediary;
-        widget.onDataChanged({widget.name: testLibrary});
-      });
-    } else {
-      // User canceled the picker
-    }
-  }
+  //     setState(() {
+  //       testLibrary = intermediary;
+  //       widget.onDataChanged({widget.name: testLibrary});
+  //     });
+  //   } else {
+  //     // User canceled the picker
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -76,13 +76,13 @@ class _DataLibraryState extends State<DataLibrary> {
                   child: const Text('Upload a CSV')
                 )
               ),
-              const SizedBox(width: 8),
-              Flexible(
-                child: FilledButton( // File selection button
-                  onPressed: uploadCBOR, 
-                  child: const Text('Upload a CBOR')
-                )
-              ),
+              // const SizedBox(width: 8),
+              // Flexible(
+              //   child: FilledButton( // File selection button
+              //     onPressed: uploadCBOR, 
+              //     child: const Text('Upload a CBOR')
+              //   )
+              // ),
             ],
           ),
           const SizedBox(height: 12),
@@ -102,9 +102,6 @@ class _DataLibraryState extends State<DataLibrary> {
               dataMap: widget.libraries[widget.name],
               name: widget.name,
             ), 
-              // Text( //CBOR WORKS BUT IS FOR SOME REASON CRASHING DATASHEET
-              //   widget.libraries[widget.name].toString()
-              // ),
         ],
       ),
     );

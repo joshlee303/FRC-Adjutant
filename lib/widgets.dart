@@ -149,7 +149,7 @@ class _DataSheetState extends State<DataSheet> {
         controller: _horizontalScrollController,
         child: SizedBox(
           width: frame.columnCount * MediaQuery.of(context).size.width * 0.1,
-          height: MediaQuery.of(context).size.height * 0.8,
+          height: MediaQuery.of(context).size.height * 0.75,
           child: Scrollbar(
             controller: _verticalScrollController,
             thumbVisibility: true,
@@ -192,119 +192,5 @@ class _DataSheetState extends State<DataSheet> {
         ),
       ),
     );
-
-    // return Column(
-    //   children: [
-    //     Row(
-    //       children: [
-    //         for (int keyIndex = 0; keyIndex < frame.keys().length; keyIndex++) 
-    //         Flexible(
-    //           child: SizedBox(
-    //             width: MediaQuery.of(context).size.width * 0.1,
-    //             height: MediaQuery.of(context).size.height * 0.04,
-    //             child: TextField(
-    //               style: TextStyle(
-    //                 fontSize: MediaQuery.of(context).size.height * 0.015, // Scale font based on screen width
-    //               ),
-    //               readOnly: true,
-    //               controller: TextEditingController(
-    //                 text: frame.keys()[keyIndex]
-    //               ),
-    //             ),
-    //           )
-    //         )
-    //       ],
-    //     ),
-    //     const SizedBox(height: 4),
-    //     Row( 
-    //       children: [
-    //         for (int columnIndex = 0; columnIndex < frame.columnCount; columnIndex++) ... [
-    //           Flexible(
-    //             child: Column(
-    //               children: [
-    //                 for (int rowIndex = 0; rowIndex < frame.rowCount; rowIndex++) ... [
-    //                   if (frame.column(columnIndex).dtype == int)
-    //                     SizedBox(
-    //                       width: MediaQuery.of(context).size.width * 0.1,
-    //                       height: MediaQuery.of(context).size.height * 0.04,
-    //                       child: TextField(
-    //                         style: TextStyle(
-    //                           fontSize: MediaQuery.of(context).size.height * 0.015, // Scale font based on screen width
-    //                         ),
-    //                         decoration: const InputDecoration(
-    //                           border: OutlineInputBorder(borderRadius: BorderRadius.zero),
-    //                         ),
-    //                         keyboardType: TextInputType.number,
-    //                         inputFormatters: <TextInputFormatter>[
-    //                           FilteringTextInputFormatter.digitsOnly,
-    //                           LengthLimitingTextInputFormatter(6)
-    //                         ],
-    //                         onChanged: (value) {
-    //                           setState(() {
-    //                             final intValue = int.tryParse(value);
-    //                             frame.column(columnIndex).setValue([rowIndex], intValue);
-    //                             widget.dataMap[widget.name] = frame;
-    //                           });
-    //                         },
-    //                         controller: _getController(columnIndex, rowIndex, false),
-    //                       ),
-    //                     ),
-    //                   if (frame.column(columnIndex).dtype == double)
-    //                     SizedBox(
-    //                       width: MediaQuery.of(context).size.width * 0.1,
-    //                       height: MediaQuery.of(context).size.height * 0.04,
-    //                       child: TextField(
-    //                         style: TextStyle(
-    //                           fontSize: MediaQuery.of(context).size.height * 0.015, // Scale font based on screen width
-    //                         ),
-    //                         decoration: const InputDecoration(
-    //                           border: OutlineInputBorder(borderRadius: BorderRadius.zero),
-    //                         ),
-    //                         keyboardType: TextInputType.number,
-    //                         inputFormatters: <TextInputFormatter>[
-    //                           FilteringTextInputFormatter.allow(
-    //                                 RegExp(r'^\d+\.?\d*')),
-    //                           LengthLimitingTextInputFormatter(6)
-    //                         ],
-    //                         onChanged: (value) {
-    //                           setState(() {
-    //                             final intValue = int.tryParse(value);
-    //                             frame.column(columnIndex).setValue([rowIndex], intValue);
-    //                             widget.dataMap[widget.name] = frame;
-    //                           });
-    //                         },
-    //                         controller: _getController(columnIndex, rowIndex, false),
-    //                       ),
-    //                     ),
-    //                   if (frame.column(columnIndex).dtype == String)
-    //                     SizedBox(
-    //                       width: MediaQuery.of(context).size.width * 0.1,
-    //                       height: MediaQuery.of(context).size.height * 0.04,
-    //                       child: TextField(
-    //                         style: TextStyle(
-    //                           fontSize: MediaQuery.of(context).size.height * 0.015, // Scale font based on screen width
-    //                         ),
-    //                         decoration: const InputDecoration(
-    //                           border: OutlineInputBorder(borderRadius: BorderRadius.zero),
-    //                         ),
-    //                         keyboardType: TextInputType.number,
-    //                         onChanged: (value) {
-    //                           setState(() {
-    //                             frame.column(columnIndex).setValue([rowIndex], value);
-    //                             widget.dataMap[widget.name] = frame;
-    //                           });
-    //                         },
-    //                         controller: _getController(columnIndex, rowIndex, false),
-    //                       ),
-    //                     )
-    //                 ]
-    //               ],
-    //             )
-    //           )
-    //         ]
-    //       ]
-    //     )
-    //   ],
-    // );
   }
 }
