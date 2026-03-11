@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:frc_adjutant/data_library.dart';
 import 'package:frc_adjutant/data_maps.dart';
+import 'package:frc_adjutant/data_visualizers.dart';
 
 void main() { 
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,8 +50,10 @@ class MyHomePage extends StatefulWidget { // Stateful because the app mode chang
 class _MyHomePageState extends State<MyHomePage> { // This is the state for the main page
   int appMode = 0;
   int libraryPageIndex = 0;
+  int visualizerPageIndex = 0;
 
-  Map<String, dynamic> libraries = getLibraries();  
+  Map<String, dynamic> libraryOne = getFirstLibrarySet();  
+  Map<String, dynamic> libraryTwo = getSecondLibrarySet();  
   
   @override
   Widget build(BuildContext context) {
@@ -232,41 +235,41 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                       icon: const Icon(Icons.home)),
               ),
               bottomNavigationBar: NavigationBar(
-                  destinations: const <NavigationDestination>[
-                    NavigationDestination(
-                      icon: Icon(Icons.list_sharp),
-                      label: 'Pit One',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.list_sharp),
-                      label: 'Match One',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.list_sharp),
-                      label: 'Pit Two',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.list_sharp),
-                      label: 'Match Two',
-                    )
-                  ],
-                  selectedIndex: libraryPageIndex,
-                  onDestinationSelected: (int index) {
-                    setState(() {
-                      libraryPageIndex = index;
-                    });
-                  },
-                ),
+                destinations: const <NavigationDestination>[
+                  NavigationDestination(
+                    icon: Icon(Icons.list_sharp),
+                    label: 'Pit One',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.list_sharp),
+                    label: 'Match One',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.list_sharp),
+                    label: 'Pit Two',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.list_sharp),
+                    label: 'Match Two',
+                  )
+                ],
+                selectedIndex: libraryPageIndex,
+                onDestinationSelected: (int index) {
+                  setState(() {
+                    libraryPageIndex = index;
+                  });
+                },
+              ),
               body: IndexedStack(
                 index: libraryPageIndex,
                 children: [
                   if (libraryPageIndex == 0)
                     DataLibrary(
-                      libraries: libraries, 
-                      name: "pitOne",
+                      library: libraryOne, 
+                      name: "pit",
                       onDataChanged: (data) {
                         data.forEach((k, v) {
-                          libraries[k] = v;
+                          libraryOne[k] = v;
                         });
                       },
                     )
@@ -274,11 +277,11 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                     const SizedBox(),
                   if (libraryPageIndex == 1)
                     DataLibrary(
-                      libraries: libraries, 
-                      name: "matchOne",
+                      library: libraryOne, 
+                      name: "match",
                       onDataChanged: (data) {
                         data.forEach((k, v) {
-                          libraries[k] = v;
+                          libraryOne[k] = v;
                         });
                       },
                     )
@@ -286,11 +289,11 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                     const SizedBox(),
                   if (libraryPageIndex == 2)
                     DataLibrary(
-                      libraries: libraries, 
-                      name: "pitTwo",
+                      library: libraryTwo, 
+                      name: "pit",
                       onDataChanged: (data) {
                         data.forEach((k, v) {
-                          libraries[k] = v;
+                          libraryTwo[k] = v;
                         });
                       },
                     )
@@ -298,11 +301,11 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                     const SizedBox(),
                   if (libraryPageIndex == 3)
                     DataLibrary(
-                      libraries: libraries, 
-                      name: "matchTwo",
+                      library: libraryTwo, 
+                      name: "match",
                       onDataChanged: (data) {
                         data.forEach((k, v) {
-                          libraries[k] = v;
+                          libraryTwo[k] = v;
                         });
                       },
                     )
@@ -326,15 +329,59 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                       },
                       icon: const Icon(Icons.home)),
               ),
-              body: Center( //TODO: Replace with actual data visualizers content
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    const Text('Data Visualizers Go Here'),
-                    Text(libraries["libraryOne"].toString())
-                  ],
-                ),
+              bottomNavigationBar: NavigationBar(
+                destinations: const <NavigationDestination>[
+                  NavigationDestination(
+                    icon: Icon(Icons.list_sharp),
+                    label: 'Set One',
+                  ),
+                  NavigationDestination(
+                    icon: Icon(Icons.list_sharp),
+                    label: 'Set Two',
+                  )
+                ],
+                selectedIndex: visualizerPageIndex,
+                onDestinationSelected: (int index) {
+                  setState(() {
+                    visualizerPageIndex = index;
+                  });
+                },
               ),
+              body: IndexedStack(
+                index: visualizerPageIndex,
+                children: [
+                  if (visualizerPageIndex == 0)
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          // const Text('Data Visualizers Go Here'),
+                          // Text(libraries["libraryOne"].toString())
+                          DataVisualizers(
+                            library: libraryOne,
+                          )
+                        ],
+                      ),
+                    )
+                  else
+                    Container(),
+                  if (visualizerPageIndex == 1)
+                    Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          // const Text('Data Visualizers Go Here'),
+                          // Text(libraries["libraryOne"].toString())
+                          DataVisualizers(
+                            library: libraryTwo,
+                          )
+                        ],
+                      ),
+                    )
+                  else
+                    Container()
+                ],
+              )
             )
           else
             const SizedBox(),

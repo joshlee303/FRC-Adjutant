@@ -3,11 +3,16 @@
 
 import 'package:dartframe/dartframe.dart';
 
-Map<String, dynamic> getLibraries() {
+Map<String, dynamic> getFirstLibrarySet() {
   return {
-    "pitOne": DataFrame.empty(),
-    "matchOne": DataFrame.empty(),
-    "pitTwo": DataFrame.empty(),
-    "matchTwo": DataFrame.empty(),
+    "pit": Map<int, DataFrame>,
+    "match": Map<int, DataFrame>,
+  };
+}
+
+Map<String, dynamic> getSecondLibrarySet() {
+  return {
+    "pit": Map<int, DataFrame>,
+    "match": Map<int, DataFrame>,
   };
 }

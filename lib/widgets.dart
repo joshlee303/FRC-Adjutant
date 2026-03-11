@@ -9,7 +9,7 @@ import 'package:file_picker/file_picker.dart';
 
 class DataSheet extends StatefulWidget {
   final DataFrame dataMap;
-  final String name;
+  final int name;
 
   const DataSheet({
     super.key,
@@ -75,7 +75,7 @@ class _DataSheetState extends State<DataSheet> {
             setState(() {
               final intValue = int.tryParse(value);
               frame.column(columnIndex).setValue([rowIndex], intValue);
-              widget.dataMap[widget.name] = frame;
+              widget.dataMap.setValue([columnIndex, rowIndex], intValue);
             });
           },
           controller: _getController(columnIndex, rowIndex, false),
@@ -101,9 +101,9 @@ class _DataSheetState extends State<DataSheet> {
           ],
           onChanged: (value) {
             setState(() {
-              final intValue = int.tryParse(value);
-              frame.column(columnIndex).setValue([rowIndex], intValue);
-              widget.dataMap[widget.name] = frame;
+              final doubleValue = double.tryParse(value);
+              frame.column(columnIndex).setValue([rowIndex], doubleValue);
+              widget.dataMap.setValue([columnIndex, rowIndex], doubleValue);
             });
           },
           controller: _getController(columnIndex, rowIndex, false),
@@ -125,7 +125,7 @@ class _DataSheetState extends State<DataSheet> {
           onChanged: (value) {
             setState(() {
               frame.column(columnIndex).setValue([rowIndex], value);
-              widget.dataMap[widget.name] = frame;
+              widget.dataMap.setValue([columnIndex, rowIndex], value);
             });
           },
           controller: _getController(columnIndex, rowIndex, false),
@@ -191,6 +191,198 @@ class _DataSheetState extends State<DataSheet> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class Statbox extends StatefulWidget {
+  final DataFrame frame;
+
+  const Statbox({
+    required this.frame,
+  });
+
+  @override
+  State<Statbox> createState() => _StatboxState();
+}
+
+class _StatboxState extends State<Statbox> {
+  String selectedKey = "";
+  String type = "";
+  String operation = "";
+
+  List<DropdownMenuItem<String>>? listOfOptions(String name) {
+    List<DropdownMenuItem<String>>? list = [];
+
+    for (int i = 0; i < widget.frame.columnCount; i++) {
+      list.add(
+        DropdownMenuItem<String>(
+          value: widget.frame.column(i).name,
+          child: Text(widget.frame.column(i).name),
+        )
+      );
+    }
+
+    return list;
+  }
+
+  List<DropdownMenuItem<String>>? statisticalOperations() {
+    if (type == "int" || type == "double") {
+      return [
+        DropdownMenuItem<String>(
+            value: "Max",
+            child: Text("Max"),
+        ),
+        DropdownMenuItem<String>(
+            value: "Min",
+            child: Text("Min"),
+        ),
+        DropdownMenuItem<String>(
+            value: "Mean",
+            child: Text("Mean"),
+        ),
+        DropdownMenuItem<String>(
+            value: "Medium",
+            child: Text("Medium"),
+        ),
+        DropdownMenuItem<String>(
+            value: "Mode",
+            child: Text("Mode"),
+        ),
+        DropdownMenuItem<String>(
+            value: "Sum",
+            child: Text("Sum"),
+        ),
+        DropdownMenuItem<String>(
+            value: "IQR",
+            child: Text("Inter-quartile Range (IQR)"),
+        ),
+        DropdownMenuItem<String>(
+            value: "Range",
+            child: Text("Range"),
+        ),
+        DropdownMenuItem<String>(
+            value: "STD",
+            child: Text("Standard Deviation"),
+        ),
+      ];
+    } else if (type == "boolean" || type == "string-bool") {
+      return [
+        DropdownMenuItem<String>(
+            value: "Rate",
+            child: Text("Rate of Success"),
+        ),
+        DropdownMenuItem<String>(
+            value: "Once",
+            child: Text("At Least Once"),
+        ),
+      ];
+    } else {
+      return [
+        DropdownMenuItem<String>(
+            value: "Invalid Type",
+            child: Text("Invalid Type"),
+        ),
+      ];
+    }
+  }
+
+  String performStatisticalOperation() {
+    Series<dynamic> column = widget.frame.column(selectedKey);
+    if (operation == "Max") {
+      return "${column.max()}";
+    } else if (operation == "Min") {
+      return "${column.min()}";
+    } else if (operation == "Mean") {
+      return "${column.mean()}";
+    } else if (operation == "Medium") {
+      return "${column.median()}";
+    } else if (operation == "Mode") {
+      return "${column.mode()}";
+    } else if (operation == "Sum") {
+      return "${column.sum()}";
+    } else if (operation == "IQR") {
+      return "${column.iqr()}";
+    } else if (operation == "Range") {
+      return "${column.range()}";
+    } else if (operation == "STD") {
+      return "${column.std()}";
+    } else if (operation == "Rate") {
+      int countTrue = 0;
+
+      for (int i = 0; i < column.count(); i++) {
+        if (type == "string-bool") {
+          if (column.getValue([i]) as String == "TRUE" || column.getValue([i]) as String == "true") {
+            countTrue++;
+          }
+        } else {
+          if (column.getValue([i]) as bool) {
+            countTrue++;
+          }
+        }
+      }
+
+      return "$countTrue/${column.count()}";
+    } else if (operation == "Once") {
+      for (int i = 0; i < column.count(); i++) {
+        if (type == "string-bool") {
+          if (column.getValue([i]) as String == "TRUE" || column.getValue([i]) as String == "true") {
+            return "True";
+          }
+        } else {
+          if (column.getValue([i]) as bool) {
+            return "True";
+          }
+        }
+      }
+
+      return "False";
+    } else if (operation == "Invalid Type") {
+      return "Invalid Type.";
+    } else {
+      return "Select an operation.";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      spacing: 8,
+      children: [
+        Expanded(
+          child: DropdownButtonFormField(
+            decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Data for Analysis"),
+            items: listOfOptions("match"), 
+            onChanged: (value) {
+              setState(() {
+                selectedKey = value ?? "";
+                type = "${widget.frame.column(selectedKey).data.first.runtimeType}";
+                if (widget.frame.column(selectedKey).data.first == "TRUE" || widget.frame.column(selectedKey).data.first == "FALSE" || widget.frame.column(selectedKey).data.first == "true" || widget.frame.column(selectedKey).data.first == "false") {
+                  type = "string-bool";
+                }
+              });
+            }
+          ),
+        ),
+        if (selectedKey != "") ... [
+          // if (type == "int" || type == "double")
+          Expanded(
+            child: DropdownButtonFormField(
+              decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Operation"),
+              items: statisticalOperations(), 
+              onChanged: (value) {
+                setState(() {
+                  operation = value ?? "";
+                });
+              }
+            ),
+          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * .1,
+            child: Text("Result: ${performStatisticalOperation()}")
+          )
+        ]
+      ],
     );
   }
 }

@@ -8,13 +8,13 @@ import 'package:file_picker/file_picker.dart';
 import 'package:frc_adjutant/widgets.dart';
 
 class DataLibrary extends StatefulWidget {
-  final Map<String, dynamic> libraries;
+  final Map<String, dynamic> library;
   final String name;
   final Function(Map<String, dynamic>) onDataChanged;
 
   const DataLibrary({
     super.key,
-    required this.libraries,
+    required this.library,
     required this.name,
     required this.onDataChanged
   });
@@ -26,6 +26,18 @@ class DataLibrary extends StatefulWidget {
 class _DataLibraryState extends State<DataLibrary> {
   DataFrame? testLibrary;
 
+  Set sortTeams(Series<dynamic> t) {
+    Set sortedSet = {};
+    List teams = t.data;
+    teams.sort();
+
+    for (dynamic team in teams) {
+      sortedSet.add(team);
+    }
+
+    return sortedSet;
+  } 
+
   void uploadCSV() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(); // Opens the file picker window
 
@@ -33,37 +45,81 @@ class _DataLibraryState extends State<DataLibrary> {
       final df = await File(result.files.single.path!);
       
       final intermediary = await FileReader.readCsv(df.path); // Test Library assignment
+
       setState(() {
         testLibrary = intermediary;
-        widget.onDataChanged({widget.name: testLibrary});
+
+        setLibrary(intermediary);
+
+        widget.onDataChanged({widget.name: widget.library[widget.name]});
       });
     } else {
       // User canceled the picker
     }
   }
 
-  // void uploadCBOR() async {
-  //   FilePickerResult? result = await FilePicker.platform.pickFiles();
+  void setLibrary(DataFrame data) {
+    Series<dynamic> tempList = Series<dynamic>(["null"], name: 'null');
+    Map<int, DataFrame> temp = {};
+    String name = "";
+    bool teamCheck, teamNumberCheck, teamSpaceNumberCheck, teamCapCheck, teamSpaceCapNumberCheck, team1Check, team1CapCheck, team1SpaceNumberCapCheck = false;
+    (data.hasColumn("team")) ? teamCheck = true : teamCheck = false;
+    (data.hasColumn("teamNumber")) ? teamNumberCheck = true : teamNumberCheck = false;
+    (data.hasColumn("team number")) ? teamSpaceNumberCheck = true : teamSpaceNumberCheck = false;
+    (data.hasColumn("Team")) ? teamCapCheck = true : teamCapCheck = false;
+    (data.hasColumn("Team Number")) ? teamSpaceCapNumberCheck = true : teamSpaceCapNumberCheck = false;
+    (data.hasColumn("team1")) ? team1Check = true : team1Check = false;
+    (data.hasColumn("Team1")) ? team1CapCheck = true : team1CapCheck = false;
+    (data.hasColumn("Team 1")) ? team1SpaceNumberCapCheck = true : team1SpaceNumberCapCheck = false;
+  
+    if (teamCheck) {
+      tempList = data.column("team");
+      name = "team";
+    } else if (teamNumberCheck) {
+      tempList = data.column("teamNumber");
+      name = "teamNumber";
+    } else if (teamSpaceNumberCheck) {
+      tempList = data.column("team number");
+      name = "team number";
+    } else if (teamCapCheck) {
+      tempList = data.column("Team");
+      name = "Team";
+    } else if (teamSpaceCapNumberCheck) {
+      tempList = data.column("Team Number");
+      name = "Team Number";
+    } else if (team1Check) {
+      tempList = data.column("team1");
+      name = "team1";
+    } else if (team1CapCheck) {
+      tempList = data.column("Team1");
+      name = "Team1";
+    } else if (team1SpaceNumberCapCheck) {
+      tempList = data.column("Team 1");
+      name = "Team 1";
+    } else {
+      throw ErrorSummary("No Valid Team Numbers in Data");
+    }
 
-  //   if (result != null && result.files.single.path != null) {
-  //     final df = await File(result.files.single.path!);
+    for (int i in sortTeams(tempList)) {
+      temp.addEntries({MapEntry(i,DataFrame.fromNames(data.columns))});
+    }  
 
-  //     final list = await df.readAsBytes();
+    for (int index = 0; index < tempList.length; index++) {
+      List<dynamic> rowTemp = [];
       
-  //     final intermediary = DataFrame.fromNames(cbor.decode(list.toList()) as List<Object?>); // Test Library assignment
+      data.row({name: tempList[index]}).forEach((key, value) {
+        rowTemp.add(value);
+      });
 
-  //     setState(() {
-  //       testLibrary = intermediary;
-  //       widget.onDataChanged({widget.name: testLibrary});
-  //     });
-  //   } else {
-  //     // User canceled the picker
-  //   }
-  // }
+      temp[tempList[index]]?.addRow(rowTemp);
+    }
+
+    widget.library[widget.name] = temp;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Center( //TODO: Replace with actual data libraries content
+    return Center( 
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
@@ -86,22 +142,22 @@ class _DataLibraryState extends State<DataLibrary> {
             ],
           ),
           const SizedBox(height: 12),
-          if (widget.libraries[widget.name] == null || widget.libraries[widget.name].columnCount == 0)
+          if (widget.library[widget.name] is! Map<int, DataFrame> || (widget.library[widget.name] as Map<int, DataFrame>).isEmpty)
             Text('No file uploaded')
           else
-            // Expanded(
-            //   child: Padding(
-            //     padding: EdgeInsets.all(16),
-            //       // child: Text(testLibrary.toString())
-            //       child: DataSheet(
-            //         dataMap: widget.libraries[widget.name], 
-            //     )
-            //   )
-            // )
-            DataSheet(
-              dataMap: widget.libraries[widget.name],
-              name: widget.name,
-            ), 
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    for (MapEntry<int, DataFrame> entry in (widget.library[widget.name] as Map<int, DataFrame>).entries)
+                      DataSheet(
+                        dataMap: widget.library[widget.name][entry.key],
+                        name: entry.key,
+                      ),
+                  ]
+                ),
+              ),
+            )
         ],
       ),
     );
