@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 import 'package:dartframe/dartframe.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:graphic/graphic.dart';
 
 
 class DataSheet extends StatefulWidget {
@@ -195,30 +196,46 @@ class _DataSheetState extends State<DataSheet> {
   }
 }
 
-class Statbox extends StatefulWidget {
-  final DataFrame frame;
 
-  const Statbox({
+
+
+
+
+
+class StatboxComparison extends StatefulWidget {
+  final Map<int, DataFrame> frame;
+  final int team1;
+  final int team2;
+
+  const StatboxComparison({
     required this.frame,
+    required this.team1,
+    required this.team2
   });
 
   @override
-  State<Statbox> createState() => _StatboxState();
+  State<StatboxComparison> createState() => _StatboxComparisonState();
 }
 
-class _StatboxState extends State<Statbox> {
+class _StatboxComparisonState extends State<StatboxComparison> {
   String selectedKey = "";
   String type = "";
   String operation = "";
+  bool graphData = false;
 
   List<DropdownMenuItem<String>>? listOfOptions(String name) {
     List<DropdownMenuItem<String>>? list = [];
+    // int fontSize = MediaQuery.of(context).
 
-    for (int i = 0; i < widget.frame.columnCount; i++) {
+    // for (int i = 0; i < widget.frame.columnCount; i++) {
+      
+    // }
+
+    for (int i = 0; i < widget.frame[widget.team1]!.columnCount; i++) {
       list.add(
         DropdownMenuItem<String>(
-          value: widget.frame.column(i).name,
-          child: Text(widget.frame.column(i).name),
+          value: widget.frame[widget.team1]!.column(i).name,
+          child: Text(widget.frame[widget.team1]!.column(i).name),
         )
       );
     }
@@ -242,8 +259,8 @@ class _StatboxState extends State<Statbox> {
             child: Text("Mean"),
         ),
         DropdownMenuItem<String>(
-            value: "Medium",
-            child: Text("Medium"),
+            value: "Median",
+            child: Text("Median"),
         ),
         DropdownMenuItem<String>(
             value: "Mode",
@@ -255,7 +272,7 @@ class _StatboxState extends State<Statbox> {
         ),
         DropdownMenuItem<String>(
             value: "IQR",
-            child: Text("Inter-quartile Range (IQR)"),
+            child: Text("IQR"),
         ),
         DropdownMenuItem<String>(
             value: "Range",
@@ -287,15 +304,15 @@ class _StatboxState extends State<Statbox> {
     }
   }
 
-  String performStatisticalOperation() {
-    Series<dynamic> column = widget.frame.column(selectedKey);
+  String performStatisticalOperation(int team) {
+    Series<dynamic> column = widget.frame[team]!.column(selectedKey);
     if (operation == "Max") {
       return "${column.max()}";
     } else if (operation == "Min") {
       return "${column.min()}";
     } else if (operation == "Mean") {
       return "${column.mean()}";
-    } else if (operation == "Medium") {
+    } else if (operation == "Median") {
       return "${column.median()}";
     } else if (operation == "Mode") {
       return "${column.mode()}";
@@ -346,43 +363,133 @@ class _StatboxState extends State<Statbox> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      spacing: 8,
+    // qTeamNum = widget.teamList[0];
+
+    return Column(
       children: [
-        Expanded(
-          child: DropdownButtonFormField(
-            decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Data for Analysis"),
-            items: listOfOptions("match"), 
-            onChanged: (value) {
-              setState(() {
-                selectedKey = value ?? "";
-                type = "${widget.frame.column(selectedKey).data.first.runtimeType}";
-                if (widget.frame.column(selectedKey).data.first == "TRUE" || widget.frame.column(selectedKey).data.first == "FALSE" || widget.frame.column(selectedKey).data.first == "true" || widget.frame.column(selectedKey).data.first == "false") {
-                  type = "string-bool";
+        Row(
+          spacing: 8,
+          children: [
+            SizedBox(
+              width: MediaQuery.of(context).size.width * .14,
+              child: DropdownButtonFormField(
+                decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Data for Analysis"),
+                items: listOfOptions("match"), 
+                onChanged: (value) {
+                  setState(() {
+                    selectedKey = value ?? "";
+                    type = "${widget.frame[widget.team1]!.column(selectedKey).data.first.runtimeType}";
+                    if (widget.frame[widget.team1]!.column(selectedKey).data.first == "TRUE" || widget.frame[widget.team1]!.column(selectedKey).data.first == "FALSE" || widget.frame[widget.team1]!.column(selectedKey).data.first == "true" || widget.frame[widget.team1]!.column(selectedKey).data.first == "false") {
+                      type = "string-bool";
+                    }
+                  });
                 }
-              });
-            }
-          ),
-        ),
-        if (selectedKey != "") ... [
-          // if (type == "int" || type == "double")
-          Expanded(
-            child: DropdownButtonFormField(
-              decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Operation"),
-              items: statisticalOperations(), 
-              onChanged: (value) {
-                setState(() {
-                  operation = value ?? "";
-                });
-              }
+              ),
             ),
-          ),
+            if (selectedKey != "") ... [
+              // if (type == "int" || type == "double")
+              SizedBox(
+                width: MediaQuery.of(context).size.width * .14,
+                child: DropdownButtonFormField(
+                  decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Operation"),
+                  items: statisticalOperations(), 
+                  onChanged: (value) {
+                    setState(() {
+                      operation = value ?? "";
+                    });
+                  }
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: "Team ${widget.team1}"
+                  ),
+                  readOnly: true,
+                  controller: TextEditingController(
+                    text: performStatisticalOperation(widget.team1)
+                  )
+                )
+              ),
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: "Team ${widget.team2}"
+                  ),
+                  readOnly: true,
+                  controller: TextEditingController(
+                    text: performStatisticalOperation(widget.team2)
+                  )
+                )
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * .02,
+                child: CheckboxListTile(
+                  value: graphData, 
+                  onChanged: (value) {
+                    setState(() {
+                      graphData = value ?? false;
+                    });
+                  }
+                )
+              )
+            ]
+          ],
+        ),
+        if (graphData) ... [
+          SizedBox(height: 12),
           SizedBox(
-            width: MediaQuery.of(context).size.width * .1,
-            child: Text("Result: ${performStatisticalOperation()}")
+            width: MediaQuery.of(context).size.width * .95,
+            child: Chart(
+              data: [
+                { 'teamNum': '${widget.team1}', operation: performStatisticalOperation(widget.team1) },
+                { 'teamNum': '${widget.team2}', operation: performStatisticalOperation(widget.team2) },
+              ], 
+              variables: {
+                "teamNum": Variable(
+                  accessor: (Map map) => map['teamNum'] as int,
+                ),
+                operation: Variable(
+                  accessor: (Map map) => map[operation] as num,
+                )
+              }, 
+              marks: [IntervalMark()],
+              axes: [
+                Defaults.horizontalAxis,
+                Defaults.verticalAxis,
+              ],
+            )
           )
         ]
       ],
+    );
+  }
+}
+
+
+
+
+
+
+
+
+class BarGraph extends StatefulWidget {
+  const BarGraph(
+    
+  );
+
+  @override
+  State<BarGraph> createState() => _BarGraphState();
+}
+
+class _BarGraphState extends State<BarGraph> {
+  String selectedKey = "";
+  List<int> teamList = [];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+
     );
   }
 }

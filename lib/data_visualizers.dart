@@ -1,6 +1,7 @@
 import 'package:dartframe/dartframe.dart';
 import 'package:flutter/material.dart';
 import 'package:frc_adjutant/widgets.dart';
+import 'package:graphic/graphic.dart';
 
 class DataVisualizers extends StatefulWidget {
   final Map<String, dynamic> library;
@@ -40,7 +41,7 @@ class _DataVisualizerState extends State<DataVisualizers> {
       child: SizedBox(
         height: MediaQuery.of(context).size.height - 152,
         width: MediaQuery.of(context).size.width * .98,
-        child: Row(
+        child: Column(
           spacing: 12,
           children: [ 
             if (widget.library["match"] is! Map<int, DataFrame> || (widget.library["match"] as Map<int, DataFrame>).isEmpty)
@@ -48,73 +49,92 @@ class _DataVisualizerState extends State<DataVisualizers> {
                 child: Text("No Data")
               )
             else  ... [
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: const Color.fromARGB(255, 177, 0, 0))
+              Row(
+                spacing: 12,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * .28,
+                    child: Text("Placeholder Text")
                   ),
-                  child: Column(
-                    spacing: 12,
-                    children: [
-                      SizedBox(
-                        width: double.infinity,
-                        child: ColoredBox(
-                          color: Color.fromARGB(187, 58, 116, 3),
-                          child: DropdownButtonFormField(
-                            decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 1"),
-                            items: spawnTeams("match"), 
-                            onChanged: (value) {
-                              setState(() {
-                                team1 = value ?? 0;
-                              });
-                            }
-                          ),
-                        )
-                      ),
-                      if (team1 != 0) ... [
-                        Statbox(frame: widget.library["match"][team1]),
-                        Statbox(frame: widget.library["match"][team1]),
-                        Statbox(frame: widget.library["match"][team1]),
-                        Statbox(frame: widget.library["match"][team1])
-                      ],
-                    ],
-                  )
-                )
+                  Expanded(
+                    // SizedBox(
+                    //   width: double.infinity,
+                      child: ColoredBox(
+                        color: Color.fromARGB(187, 58, 116, 3),
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 1"),
+                          items: spawnTeams("match"), 
+                          onChanged: (value) {
+                            setState(() {
+                              team1 = value ?? 0;
+                            });
+                          }
+                        ),
+                      )
+                    // ),
+                  ),
+                  Expanded(
+                    // SizedBox(
+                    //   width: double.infinity,
+                      child: ColoredBox(
+                        color: Color.fromARGB(187, 58, 116, 3),
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 2"),
+                          items: spawnTeams("match"), 
+                          onChanged: (value) {
+                            setState(() {
+                              team2 = value ?? 0;
+                            });
+                          }
+                        ),
+                      )
+                    // ),
+                  ),
+                  Text("Graph?")
+                ],
               ),
-              Expanded(
-                child: Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: const Color.fromARGB(255, 177, 0, 0))
-                  ),
-                  child: Column(
-                    spacing: 12,
-                    children: [
-                      SizedBox(
-                        width: double.infinity,
-                        child: ColoredBox(
-                          color: Color.fromARGB(187, 58, 116, 3),
-                          child: DropdownButtonFormField(
-                            decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 2"),
-                            items: spawnTeams("match"), 
-                            onChanged: (value) {
-                              setState(() {
-                                team2 = value ?? 0;
-                              });
-                            }
-                          ),
-                        )
-                      ),
-                      if (team2 != 0) ... [
-                        Statbox(frame: widget.library["match"][team2]),
-                        Statbox(frame: widget.library["match"][team2]),
-                        Statbox(frame: widget.library["match"][team2]),
-                        Statbox(frame: widget.library["match"][team2])
-                      ],
-                    ],
-                  )
-                )
+              Column(
+                spacing: 12,
+                children: [
+                  if (team1 != 0 && team2 != 0) ... [
+                    StatboxComparison(
+                      frame: widget.library["match"], 
+                      team1: team1, 
+                      team2: team2
+                    ),
+                    StatboxComparison(
+                      frame: widget.library["match"], 
+                      team1: team1, 
+                      team2: team2
+                    ),
+                    StatboxComparison(
+                      frame: widget.library["match"], 
+                      team1: team1, 
+                      team2: team2
+                    ),
+                    StatboxComparison(
+                      frame: widget.library["match"], 
+                      team1: team1, 
+                      team2: team2
+                    )
+                  ],
+                  // SizedBox(height: 12),
+                  // Expanded(
+                  //   child: Chart(
+                  //     data: [
+                        
+                  //     ], 
+                  //     variables: {
+                        
+                  //     }, 
+                  //     marks: [IntervalMark()],
+                  //     axes: [
+                  //       Defaults.horizontalAxis,
+                  //       Defaults.verticalAxis,
+                  //     ],
+                  //   )
+                  // )
+                ],
               )
             ]
           ],
