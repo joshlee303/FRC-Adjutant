@@ -352,30 +352,16 @@ class _MyHomePageState extends State<MyHomePage> { // This is the state for the 
                 children: [
                   if (visualizerPageIndex == 0)
                     Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          // const Text('Data Visualizers Go Here'),
-                          // Text(libraries["libraryOne"].toString())
-                          DataVisualizers(
-                            library: libraryOne,
-                          )
-                        ],
-                      ),
+                      child: SizedBox(
+                        child: DataVisualizers(library: libraryOne),
+                      )
                     )
                   else
                     Container(),
                   if (visualizerPageIndex == 1)
                     Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          // const Text('Data Visualizers Go Here'),
-                          // Text(libraries["libraryOne"].toString())
-                          DataVisualizers(
-                            library: libraryTwo,
-                          )
-                        ],
+                      child: SizedBox(
+                          child: DataVisualizers(library: libraryTwo),
                       ),
                     )
                   else

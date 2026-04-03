@@ -36,13 +36,16 @@ class _DataVisualizerState extends State<DataVisualizers> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView( 
-      padding: EdgeInsetsGeometry.directional(top: 16),
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height - 152,
-        width: MediaQuery.of(context).size.width * .98,
-        child: Column(
-          spacing: 12,
+    return 
+    // SingleChildScrollView( 
+    //   padding: EdgeInsetsGeometry.directional(top: 16),
+      // child: SizedBox(
+      //   // height: MediaQuery.of(context).size.height - 152,
+      //   width: MediaQuery.of(context).size.width * .98,
+        // child: 
+        ListView(
+          // padding: EdgeInsetsGeometry.directional(top: 16),
+          padding: EdgeInsets.all(16),
           children: [ 
             if (widget.library["match"] is! Map<int, DataFrame> || (widget.library["match"] as Map<int, DataFrame>).isEmpty)
               Center(
@@ -93,25 +96,29 @@ class _DataVisualizerState extends State<DataVisualizers> {
                   Text("Graph?")
                 ],
               ),
-              Column(
-                spacing: 12,
-                children: [
+              SizedBox(height: 12),
+              // Column(
+              //   spacing: 12,
+              //   children: [
                   if (team1 != 0 && team2 != 0) ... [
                     StatboxComparison(
                       frame: widget.library["match"], 
                       team1: team1, 
                       team2: team2
                     ),
+                    SizedBox(height: 12),
                     StatboxComparison(
                       frame: widget.library["match"], 
                       team1: team1, 
                       team2: team2
                     ),
+                    SizedBox(height: 12),
                     StatboxComparison(
                       frame: widget.library["match"], 
                       team1: team1, 
                       team2: team2
                     ),
+                    SizedBox(height: 12),
                     StatboxComparison(
                       frame: widget.library["match"], 
                       team1: team1, 
@@ -134,12 +141,12 @@ class _DataVisualizerState extends State<DataVisualizers> {
                   //     ],
                   //   )
                   // )
-                ],
-              )
+              //   ],
+              // )
             ]
           ],
-        )
-      )
+        // )
+      // )
     );
   }
 }

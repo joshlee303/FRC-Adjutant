@@ -304,26 +304,26 @@ class _StatboxComparisonState extends State<StatboxComparison> {
     }
   }
 
-  String performStatisticalOperation(int team) {
+  num performStatisticalOperation(int team) {
     Series<dynamic> column = widget.frame[team]!.column(selectedKey);
     if (operation == "Max") {
-      return "${column.max()}";
+      return column.max();
     } else if (operation == "Min") {
-      return "${column.min()}";
+      return column.min();
     } else if (operation == "Mean") {
-      return "${column.mean()}";
+      return column.mean();
     } else if (operation == "Median") {
-      return "${column.median()}";
+      return column.median();
     } else if (operation == "Mode") {
-      return "${column.mode()}";
+      return column.mode();
     } else if (operation == "Sum") {
-      return "${column.sum()}";
+      return column.sum();
     } else if (operation == "IQR") {
-      return "${column.iqr()}";
+      return column.iqr();
     } else if (operation == "Range") {
-      return "${column.range()}";
+      return column.range();
     } else if (operation == "STD") {
-      return "${column.std()}";
+      return column.std();
     } else if (operation == "Rate") {
       int countTrue = 0;
 
@@ -339,25 +339,25 @@ class _StatboxComparisonState extends State<StatboxComparison> {
         }
       }
 
-      return "$countTrue/${column.count()}";
+      return countTrue / column.count();
     } else if (operation == "Once") {
       for (int i = 0; i < column.count(); i++) {
         if (type == "string-bool") {
           if (column.getValue([i]) as String == "TRUE" || column.getValue([i]) as String == "true") {
-            return "True";
+            return 1;
           }
         } else {
           if (column.getValue([i]) as bool) {
-            return "True";
+            return 1;
           }
         }
       }
 
-      return "False";
+      return 0;
     } else if (operation == "Invalid Type") {
-      return "Invalid Type.";
+      return -1;
     } else {
-      return "Select an operation.";
+      return 404;
     }
   }
 
@@ -377,6 +377,11 @@ class _StatboxComparisonState extends State<StatboxComparison> {
                 items: listOfOptions("match"), 
                 onChanged: (value) {
                   setState(() {
+                    operation = '';
+                    selectedKey = "";
+                    type = "";
+                  });
+                  setState(() {
                     selectedKey = value ?? "";
                     type = "${widget.frame[widget.team1]!.column(selectedKey).data.first.runtimeType}";
                     if (widget.frame[widget.team1]!.column(selectedKey).data.first == "TRUE" || widget.frame[widget.team1]!.column(selectedKey).data.first == "FALSE" || widget.frame[widget.team1]!.column(selectedKey).data.first == "true" || widget.frame[widget.team1]!.column(selectedKey).data.first == "false") {
@@ -391,15 +396,18 @@ class _StatboxComparisonState extends State<StatboxComparison> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * .14,
                 child: DropdownButtonFormField(
+                  key: ValueKey(selectedKey),
                   decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Operation"),
                   items: statisticalOperations(), 
                   onChanged: (value) {
                     setState(() {
+                      // print("1");
                       operation = value ?? "";
                     });
                   }
                 ),
               ),
+              if (operation != "") ... [
               Expanded(
                 child: TextField(
                   decoration: InputDecoration(
@@ -407,7 +415,7 @@ class _StatboxComparisonState extends State<StatboxComparison> {
                   ),
                   readOnly: true,
                   controller: TextEditingController(
-                    text: performStatisticalOperation(widget.team1)
+                    text: "${performStatisticalOperation(widget.team1)}"
                   )
                 )
               ),
@@ -418,7 +426,7 @@ class _StatboxComparisonState extends State<StatboxComparison> {
                   ),
                   readOnly: true,
                   controller: TextEditingController(
-                    text: performStatisticalOperation(widget.team2)
+                    text: "${performStatisticalOperation(widget.team2)}"
                   )
                 )
               ),
@@ -433,13 +441,16 @@ class _StatboxComparisonState extends State<StatboxComparison> {
                   }
                 )
               )
+              ]
             ]
           ],
         ),
         if (graphData) ... [
           SizedBox(height: 12),
           SizedBox(
-            width: MediaQuery.of(context).size.width * .95,
+            // width: 400,
+            width: MediaQuery.of(context).size.width * .85,
+            height: MediaQuery.of(context).size.height * .55,
             child: Chart(
               data: [
                 { 'teamNum': '${widget.team1}', operation: performStatisticalOperation(widget.team1) },
@@ -447,12 +458,13 @@ class _StatboxComparisonState extends State<StatboxComparison> {
               ], 
               variables: {
                 "teamNum": Variable(
-                  accessor: (Map map) => map['teamNum'] as int,
+                  accessor: (Map map) => map['teamNum'] as String,
                 ),
                 operation: Variable(
                   accessor: (Map map) => map[operation] as num,
+                  scale: LinearScale(min: 0),
                 )
-              }, 
+              },
               marks: [IntervalMark()],
               axes: [
                 Defaults.horizontalAxis,
