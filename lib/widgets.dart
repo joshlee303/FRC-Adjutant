@@ -204,13 +204,23 @@ class _DataSheetState extends State<DataSheet> {
 
 class StatboxComparison extends StatefulWidget {
   final Map<int, DataFrame> frame;
+  final bool allianceMode;
   final int team1;
   final int team2;
+  final int team3;
+  final int team4;
+  final int team5;
+  final int team6;
 
   const StatboxComparison({
     required this.frame,
+    required this.allianceMode,
     required this.team1,
-    required this.team2
+    required this.team2,
+    this.team3 = 0,
+    this.team4 = 0,
+    this.team5 = 0,
+    this.team6 = 0
   });
 
   @override
@@ -380,6 +390,7 @@ class _StatboxComparisonState extends State<StatboxComparison> {
                     operation = '';
                     selectedKey = "";
                     type = "";
+                    graphData = false;
                   });
                   setState(() {
                     selectedKey = value ?? "";
@@ -430,6 +441,52 @@ class _StatboxComparisonState extends State<StatboxComparison> {
                   )
                 )
               ),
+              if (widget.allianceMode) ... [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: "Team ${widget.team3}"
+                    ),
+                    readOnly: true,
+                    controller: TextEditingController(
+                      text: "${performStatisticalOperation(widget.team3)}"
+                    )
+                  )
+                ),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: "Team ${widget.team4}"
+                    ),
+                    readOnly: true,
+                    controller: TextEditingController(
+                      text: "${performStatisticalOperation(widget.team4)}"
+                    )
+                  )
+                ),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: "Team ${widget.team5}"
+                    ),
+                    readOnly: true,
+                    controller: TextEditingController(
+                      text: "${performStatisticalOperation(widget.team5)}"
+                    )
+                  )
+                ),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: "Team ${widget.team6}"
+                    ),
+                    readOnly: true,
+                    controller: TextEditingController(
+                      text: "${performStatisticalOperation(widget.team6)}"
+                    )
+                  )
+                ),
+              ],
               SizedBox(
                 width: MediaQuery.of(context).size.width * .02,
                 child: CheckboxListTile(
@@ -445,8 +502,8 @@ class _StatboxComparisonState extends State<StatboxComparison> {
             ]
           ],
         ),
-        if (graphData) ... [
-          SizedBox(height: 12),
+        SizedBox(height: 12),
+        if (graphData && !widget.allianceMode) ... [
           SizedBox(
             // width: 400,
             width: MediaQuery.of(context).size.width * .85,
@@ -469,7 +526,37 @@ class _StatboxComparisonState extends State<StatboxComparison> {
               axes: [
                 Defaults.horizontalAxis,
                 Defaults.verticalAxis,
-              ],
+              ]
+            )
+          )
+        ] else if (graphData && widget.allianceMode) ... [
+          SizedBox(
+            // width: 400,
+            width: MediaQuery.of(context).size.width * .85,
+            height: MediaQuery.of(context).size.height * .55,
+            child: Chart(
+              data: [
+                { 'teamNum': '${widget.team1}', operation: performStatisticalOperation(widget.team1) },
+                { 'teamNum': '${widget.team2}', operation: performStatisticalOperation(widget.team2) },
+                { 'teamNum': '${widget.team3}', operation: performStatisticalOperation(widget.team3) },
+                { 'teamNum': '${widget.team4}', operation: performStatisticalOperation(widget.team4) },
+                { 'teamNum': '${widget.team5}', operation: performStatisticalOperation(widget.team5) },
+                { 'teamNum': '${widget.team6}', operation: performStatisticalOperation(widget.team6) },
+              ], 
+              variables: {
+                "teamNum": Variable(
+                  accessor: (Map map) => map['teamNum'] as String,
+                ),
+                operation: Variable(
+                  accessor: (Map map) => map[operation] as num,
+                  scale: LinearScale(min: 0),
+                )
+              },
+              marks: [IntervalMark()],
+              axes: [
+                Defaults.horizontalAxis,
+                Defaults.verticalAxis,
+              ]
             )
           )
         ]

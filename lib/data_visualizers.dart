@@ -18,6 +18,11 @@ class DataVisualizers extends StatefulWidget {
 class _DataVisualizerState extends State<DataVisualizers> {
   int team1 = 0;
   int team2 = 0;
+  int team3 = 0;
+  int team4 = 0;
+  int team5 = 0;
+  int team6 = 0;
+  bool allianceMode = false;
 
   List<DropdownMenuItem<int>>? spawnTeams(String name) {
     List<DropdownMenuItem<int>>? list = [];
@@ -57,13 +62,21 @@ class _DataVisualizerState extends State<DataVisualizers> {
                 children: [
                   SizedBox(
                     width: MediaQuery.of(context).size.width * .28,
-                    child: Text("Placeholder Text")
+                    child: CheckboxListTile(
+                      title: Text("Alliance Comparison Mode?"),
+                      value: allianceMode, 
+                      onChanged: (value) {
+                        setState(() {
+                          allianceMode = value ?? false;
+                        });
+                      }
+                    )
                   ),
                   Expanded(
                     // SizedBox(
                     //   width: double.infinity,
                       child: ColoredBox(
-                        color: Color.fromARGB(187, 58, 116, 3),
+                        color: (allianceMode) ? Color.fromARGB(255, 123, 17, 17) : Color.fromARGB(187, 58, 116, 3),
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 1"),
                           items: spawnTeams("match"), 
@@ -80,7 +93,7 @@ class _DataVisualizerState extends State<DataVisualizers> {
                     // SizedBox(
                     //   width: double.infinity,
                       child: ColoredBox(
-                        color: Color.fromARGB(187, 58, 116, 3),
+                        color: (allianceMode) ? Color.fromARGB(255, 123, 17, 17) : Color.fromARGB(187, 58, 116, 3),
                         child: DropdownButtonFormField(
                           decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 2"),
                           items: spawnTeams("match"), 
@@ -93,6 +106,64 @@ class _DataVisualizerState extends State<DataVisualizers> {
                       )
                     // ),
                   ),
+                  if (allianceMode) ... [
+                    Expanded(
+                      child: ColoredBox(
+                        color: Color.fromARGB(255, 123, 17, 17),
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 3"),
+                          items: spawnTeams("match"), 
+                          onChanged: (value) {
+                            setState(() {
+                              team3 = value ?? 0;
+                            });
+                          }
+                        ),
+                      )
+                    ),
+                    Expanded(
+                      child: ColoredBox(
+                        color: Color.fromARGB(255, 35, 52, 207),
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 4"),
+                          items: spawnTeams("match"), 
+                          onChanged: (value) {
+                            setState(() {
+                              team4 = value ?? 0;
+                            });
+                          }
+                        ),
+                      )
+                    ),
+                    Expanded(
+                      child: ColoredBox(
+                        color: Color.fromARGB(255, 35, 52, 207),
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 5"),
+                          items: spawnTeams("match"), 
+                          onChanged: (value) {
+                            setState(() {
+                              team5 = value ?? 0;
+                            });
+                          }
+                        ),
+                      )
+                    ),
+                    Expanded(
+                      child: ColoredBox(
+                        color: Color.fromARGB(255, 35, 52, 207),
+                        child: DropdownButtonFormField(
+                          decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 6"),
+                          items: spawnTeams("match"), 
+                          onChanged: (value) {
+                            setState(() {
+                              team6 = value ?? 0;
+                            });
+                          }
+                        ),
+                      )
+                    ),
+                  ],
                   Text("Graph?")
                 ],
               ),
@@ -100,49 +171,51 @@ class _DataVisualizerState extends State<DataVisualizers> {
               // Column(
               //   spacing: 12,
               //   children: [
-                  if (team1 != 0 && team2 != 0) ... [
+                  if ((!allianceMode && team1 != 0 && team2 != 0) || (allianceMode && team1 != 0 && team2 != 0 && team3 != 0 && team4 != 0 && team5 != 0 && team6 != 0)) ... [
                     StatboxComparison(
                       frame: widget.library["match"], 
+                      allianceMode: allianceMode,
                       team1: team1, 
-                      team2: team2
+                      team2: team2,
+                      team3: team3,
+                      team4: team4,
+                      team5: team5,
+                      team6: team6
                     ),
                     SizedBox(height: 12),
                     StatboxComparison(
                       frame: widget.library["match"], 
+                      allianceMode: allianceMode,
                       team1: team1, 
-                      team2: team2
+                      team2: team2,
+                      team3: team3,
+                      team4: team4,
+                      team5: team5,
+                      team6: team6
                     ),
                     SizedBox(height: 12),
                     StatboxComparison(
                       frame: widget.library["match"], 
+                      allianceMode: allianceMode,
                       team1: team1, 
-                      team2: team2
+                      team2: team2,
+                      team3: team3,
+                      team4: team4,
+                      team5: team5,
+                      team6: team6
                     ),
                     SizedBox(height: 12),
                     StatboxComparison(
                       frame: widget.library["match"], 
+                      allianceMode: allianceMode,
                       team1: team1, 
-                      team2: team2
+                      team2: team2,
+                      team3: team3,
+                      team4: team4,
+                      team5: team5,
+                      team6: team6
                     )
                   ],
-                  // SizedBox(height: 12),
-                  // Expanded(
-                  //   child: Chart(
-                  //     data: [
-                        
-                  //     ], 
-                  //     variables: {
-                        
-                  //     }, 
-                  //     marks: [IntervalMark()],
-                  //     axes: [
-                  //       Defaults.horizontalAxis,
-                  //       Defaults.verticalAxis,
-                  //     ],
-                  //   )
-                  // )
-              //   ],
-              // )
             ]
           ],
         // )
