@@ -213,6 +213,7 @@ class StatboxComparison extends StatefulWidget {
   final int team6;
 
   const StatboxComparison({
+    super.key, 
     required this.frame,
     required this.allianceMode,
     required this.team1,

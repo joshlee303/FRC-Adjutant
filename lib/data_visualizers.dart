@@ -23,6 +23,7 @@ class _DataVisualizerState extends State<DataVisualizers> {
   int team5 = 0;
   int team6 = 0;
   bool allianceMode = false;
+  bool loadComparison = false;
 
   List<DropdownMenuItem<int>>? spawnTeams(String name) {
     List<DropdownMenuItem<int>>? list = [];
@@ -68,6 +69,12 @@ class _DataVisualizerState extends State<DataVisualizers> {
                       onChanged: (value) {
                         setState(() {
                           allianceMode = value ?? false;
+                          if (!allianceMode) {
+                            team3 = 0;
+                            team4 = 0;
+                            team5 = 0;
+                            team6 = 0;
+                          }
                         });
                       }
                     )
@@ -173,6 +180,7 @@ class _DataVisualizerState extends State<DataVisualizers> {
               //   children: [
                   if ((!allianceMode && team1 != 0 && team2 != 0) || (allianceMode && team1 != 0 && team2 != 0 && team3 != 0 && team4 != 0 && team5 != 0 && team6 != 0)) ... [
                     StatboxComparison(
+                      key: ValueKey('statbox_1_${allianceMode}'),
                       frame: widget.library["match"], 
                       allianceMode: allianceMode,
                       team1: team1, 
@@ -184,6 +192,7 @@ class _DataVisualizerState extends State<DataVisualizers> {
                     ),
                     SizedBox(height: 12),
                     StatboxComparison(
+                      key: ValueKey('statbox_2_${allianceMode}'),
                       frame: widget.library["match"], 
                       allianceMode: allianceMode,
                       team1: team1, 
@@ -195,6 +204,7 @@ class _DataVisualizerState extends State<DataVisualizers> {
                     ),
                     SizedBox(height: 12),
                     StatboxComparison(
+                      key: ValueKey('statbox_3_${allianceMode}'),
                       frame: widget.library["match"], 
                       allianceMode: allianceMode,
                       team1: team1, 
@@ -206,6 +216,7 @@ class _DataVisualizerState extends State<DataVisualizers> {
                     ),
                     SizedBox(height: 12),
                     StatboxComparison(
+                      key: ValueKey('statbox_4_${allianceMode}'),
                       frame: widget.library["match"], 
                       allianceMode: allianceMode,
                       team1: team1, 
