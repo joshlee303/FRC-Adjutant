@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:dartframe/dartframe.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:frc_adjutant/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class DataLibrary extends StatefulWidget {
   final Map<String, dynamic> library;
@@ -25,6 +26,38 @@ class DataLibrary extends StatefulWidget {
 
 class _DataLibraryState extends State<DataLibrary> {
   DataFrame? testLibrary;
+  String currentPath = "";
+  bool refresh = false;
+
+  Future<void> setPath(String path) async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    pref.setString("${widget.name}Path", path);
+    currentPath = path;
+  }
+
+  Future<void> loadFromPath() async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+
+    final path = (pref.get("${widget.name}Path") ?? "") as String;
+
+    final pathWorks = await File(path).exists();
+
+    if (pathWorks) {
+      final df = await File(path);
+      currentPath = path;
+        
+      final intermediary = await FileReader.readCsv(df.path); // Test Library assignment
+
+      setState(() {
+        testLibrary = intermediary;
+
+        setLibrary(intermediary);
+
+        widget.onDataChanged({widget.name: widget.library[widget.name]});
+      });
+    }
+  }
 
   Set sortTeams(Series<dynamic> t) {
     Set sortedSet = {};
@@ -41,8 +74,13 @@ class _DataLibraryState extends State<DataLibrary> {
   void uploadCSV() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(); // Opens the file picker window
 
+    //TODO: read file onto the proper document storage file by widget.name comparison
+    //overwrite the existing file there
+
     if (result != null && result.files.single.path != null) {
       final df = await File(result.files.single.path!);
+
+      setPath(result.files.single.path!);
       
       final intermediary = await FileReader.readCsv(df.path); // Test Library assignment
 
@@ -119,10 +157,13 @@ class _DataLibraryState extends State<DataLibrary> {
 
   @override
   Widget build(BuildContext context) {
+    loadFromPath();
+
     return Center( 
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -131,27 +172,36 @@ class _DataLibraryState extends State<DataLibrary> {
                   onPressed: uploadCSV, 
                   child: const Text('Upload a CSV')
                 )
-              ),
-              // const SizedBox(width: 8),
-              // Flexible(
-              //   child: FilledButton( // File selection button
-              //     onPressed: uploadCBOR, 
-              //     child: const Text('Upload a CBOR')
-              //   )
-              // ),
+              ), 
+              SizedBox(width: 8),
+              Flexible(
+                child: FilledButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.library[widget.name] = Map<int, DataFrame>;
+                      setPath("");
+                      refresh = !refresh;
+                    });
+                  },
+                  child: const Text('Clear Data')
+                )
+              ), 
+              SizedBox(width: 8),
+              Text("Current Path: $currentPath")
             ],
           ),
           const SizedBox(height: 12),
           if (widget.library[widget.name] is! Map<int, DataFrame> || (widget.library[widget.name] as Map<int, DataFrame>).isEmpty)
-            Text('No file uploaded')
+            Text('No file uploaded') //TODO: change this if statement to also check for existing files in the pit/match directory
           else
             Expanded(
               child: SingleChildScrollView(
+                key: ValueKey(refresh),
                 child: Column(
                   children: [
                     for (MapEntry<int, DataFrame> entry in (widget.library[widget.name] as Map<int, DataFrame>).entries)
                       DataSheet(
-                        dataMap: widget.library[widget.name][entry.key],
+                        dataMap: widget.library[widget.name][entry.key], //TODO: need a function to check for existing files and read from that
                         name: entry.key,
                       ),
                   ]
