@@ -422,6 +422,7 @@ class _StatboxComparisonState extends State<StatboxComparison> {
               if (operation != "") ... [
               Expanded(
                 child: TextField(
+                  key: ValueKey(widget.team1),
                   decoration: InputDecoration(
                     labelText: "Team ${widget.team1}"
                   ),
@@ -433,6 +434,7 @@ class _StatboxComparisonState extends State<StatboxComparison> {
               ),
               Expanded(
                 child: TextField(
+                  key: ValueKey(widget.team2),
                   decoration: InputDecoration(
                     labelText: "Team ${widget.team2}"
                   ),
@@ -445,6 +447,7 @@ class _StatboxComparisonState extends State<StatboxComparison> {
               if (widget.allianceMode) ... [
                 Expanded(
                   child: TextField(
+                    key: ValueKey(widget.team3),
                     decoration: InputDecoration(
                       labelText: "Team ${widget.team3}"
                     ),
@@ -456,6 +459,7 @@ class _StatboxComparisonState extends State<StatboxComparison> {
                 ),
                 Expanded(
                   child: TextField(
+                    key: ValueKey(widget.team4),
                     decoration: InputDecoration(
                       labelText: "Team ${widget.team4}"
                     ),
@@ -467,6 +471,7 @@ class _StatboxComparisonState extends State<StatboxComparison> {
                 ),
                 Expanded(
                   child: TextField(
+                    key: ValueKey(widget.team5),
                     decoration: InputDecoration(
                       labelText: "Team ${widget.team5}"
                     ),
@@ -478,6 +483,7 @@ class _StatboxComparisonState extends State<StatboxComparison> {
                 ),
                 Expanded(
                   child: TextField(
+                    key: ValueKey(widget.team6),
                     decoration: InputDecoration(
                       labelText: "Team ${widget.team6}"
                     ),
@@ -510,6 +516,7 @@ class _StatboxComparisonState extends State<StatboxComparison> {
             width: MediaQuery.of(context).size.width * .85,
             height: MediaQuery.of(context).size.height * .55,
             child: Chart(
+              key: ValueKey(widget.team1 + widget.team2),
               data: [
                 { 'teamNum': '${widget.team1}', operation: performStatisticalOperation(widget.team1) },
                 { 'teamNum': '${widget.team2}', operation: performStatisticalOperation(widget.team2) },
@@ -536,6 +543,7 @@ class _StatboxComparisonState extends State<StatboxComparison> {
             width: MediaQuery.of(context).size.width * .85,
             height: MediaQuery.of(context).size.height * .55,
             child: Chart(
+              key: ValueKey(widget.team1 + widget.team2 + widget.team3 + widget.team4 + widget.team5 + widget.team6),
               data: [
                 { 'teamNum': '${widget.team1}', operation: performStatisticalOperation(widget.team1) },
                 { 'teamNum': '${widget.team2}', operation: performStatisticalOperation(widget.team2) },
