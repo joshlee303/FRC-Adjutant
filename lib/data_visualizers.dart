@@ -25,8 +25,6 @@ class _DataVisualizerState extends State<DataVisualizers> {
   bool allianceMode = false;
   bool loadComparison = false;
 
-  List<StatboxComparison> listOfData = [];
-
   int comparisonCount = 0;
 
   List<DropdownMenuItem<int>>? spawnTeams(String name) {
@@ -42,30 +40,6 @@ class _DataVisualizerState extends State<DataVisualizers> {
     }
 
     return list;
-  }
-
-  void addStatboxComparison(bool aMode, int one, int two, int three, int four, int five, int six) {
-    listOfData.add(
-      StatboxComparison(
-        key: ValueKey('statbox_${listOfData.length}_${allianceMode}_${team1}_${team2}_${team3}_${team4}_${team5}_$team6'),
-        frame: widget.library["match"], 
-        allianceMode: allianceMode, 
-        team1: team1, 
-        team2: team2, 
-        team3: team3, 
-        team4: team4, 
-        team5: team5, 
-        team6: team6
-        // allianceMode: aMode, 
-        // team1: one, 
-        // team2: two, 
-        // team3: three, 
-        // team4: four, 
-        // team5: five, 
-        // team6: six
-      )
-    );
-    setState(() { });
   }
 
   @override
@@ -208,7 +182,7 @@ class _DataVisualizerState extends State<DataVisualizers> {
                 itemCount: comparisonCount,
                 itemBuilder: (_, index) {
                   return StatboxComparison(
-                    key: ValueKey('statbox_${listOfData.length}_$allianceMode'),
+                    key: ValueKey('statbox_$allianceMode'),
                     frame: widget.library["match"], 
                     allianceMode: allianceMode, 
                     team1: team1, 
@@ -246,61 +220,6 @@ class _DataVisualizerState extends State<DataVisualizers> {
           )
         ],
       )
-      // body: ListView(
-      //     // padding: EdgeInsetsGeometry.directional(top: 16),
-      //     padding: EdgeInsets.all(16),
-      //     children: [ 
-      //       if ((!allianceMode && team1 != 0 && team2 != 0) || (allianceMode && team1 != 0 && team2 != 0 && team3 != 0 && team4 != 0 && team5 != 0 && team6 != 0)) ... [
-      //         // StatboxComparison(
-      //         //   key: ValueKey('statbox_1_${allianceMode}'),
-      //         //   frame: widget.library["match"], 
-      //         //   allianceMode: allianceMode,
-      //         //   team1: team1, 
-      //         //   team2: team2,
-      //         //   team3: team3,
-      //         //   team4: team4,
-      //         //   team5: team5,
-      //         //   team6: team6
-      //         // ),
-      //         // SizedBox(height: 12),
-      //         // StatboxComparison(
-      //         //   key: ValueKey('statbox_2_${allianceMode}'),
-      //         //   frame: widget.library["match"], 
-      //         //   allianceMode: allianceMode,
-      //         //   team1: team1, 
-      //         //   team2: team2,
-      //         //   team3: team3,
-      //         //   team4: team4,
-      //         //   team5: team5,
-      //         //   team6: team6
-      //         // ),
-      //         // SizedBox(height: 12),
-      //         // StatboxComparison(
-      //         //   key: ValueKey('statbox_3_${allianceMode}'),
-      //         //   frame: widget.library["match"], 
-      //         //   allianceMode: allianceMode,
-      //         //   team1: team1, 
-      //         //   team2: team2,
-      //         //   team3: team3,
-      //         //   team4: team4,
-      //         //   team5: team5,
-      //         //   team6: team6
-      //         // ),
-      //         // SizedBox(height: 12),
-      //         // StatboxComparison(
-      //         //   key: ValueKey('statbox_4_${allianceMode}'),
-      //         //   frame: widget.library["match"], 
-      //         //   allianceMode: allianceMode,
-      //         //   team1: team1, 
-      //         //   team2: team2,
-      //         //   team3: team3,
-      //         //   team4: team4,
-      //         //   team5: team5,
-      //         //   team6: team6
-      //         // ),
-      //       ],
-      //     ],
-      //   )
     );
   }
 }
