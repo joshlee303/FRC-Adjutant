@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
@@ -511,66 +512,158 @@ class _StatboxComparisonState extends State<StatboxComparison> {
         ),
         SizedBox(height: 12),
         if (graphData && !widget.allianceMode) ... [
-          SizedBox(
-            // width: 400,
-            width: MediaQuery.of(context).size.width * .85,
-            height: MediaQuery.of(context).size.height * .55,
-            child: Chart(
-              key: ValueKey(widget.team1 + widget.team2),
-              data: [
-                { 'teamNum': '${widget.team1}', operation: performStatisticalOperation(widget.team1) },
-                { 'teamNum': '${widget.team2}', operation: performStatisticalOperation(widget.team2) },
-              ], 
-              variables: {
-                "teamNum": Variable(
-                  accessor: (Map map) => map['teamNum'] as String,
-                ),
-                operation: Variable(
-                  accessor: (Map map) => map[operation] as num,
-                  scale: LinearScale(min: 0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                // width: 400,
+                width: MediaQuery.of(context).size.width * .45,
+                height: MediaQuery.of(context).size.height * .4,
+                child: Chart(
+                  key: ValueKey(widget.team1 + widget.team2),
+                  data: [
+                    { 'teamNum': '${widget.team1}', operation: performStatisticalOperation(widget.team1) },
+                    { 'teamNum': '${widget.team2}', operation: performStatisticalOperation(widget.team2) },
+                  ], 
+                  variables: {
+                    "teamNum": Variable(
+                      accessor: (Map map) => map['teamNum'] as String,
+                    ),
+                    operation: Variable(
+                      accessor: (Map map) => map[operation] as num,
+                      scale: LinearScale(min: 0),
+                    )
+                  },
+                  marks: [IntervalMark()],
+                  axes: [
+                    Defaults.horizontalAxis,
+                    Defaults.verticalAxis,
+                  ]
                 )
-              },
-              marks: [IntervalMark()],
-              axes: [
-                Defaults.horizontalAxis,
-                Defaults.verticalAxis,
-              ]
-            )
+              ),
+              SizedBox(width: 12),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * .45,
+                height: MediaQuery.of(context).size.height * .4,
+                child: ScatterChart(
+                  ScatterChartData(
+                    scatterSpots: generateScatterSpots(widget.team1, widget.team2),
+                    minX: 0,
+                    maxX: 25,
+                    minY: 0,
+                    maxY: 25,
+                    titlesData: FlTitlesData(
+                      leftTitles: AxisTitles(
+                        axisNameWidget: Text(selectedKey),
+                        sideTitles: SideTitles(
+
+                        )
+                      ),
+                      bottomTitles: AxisTitles(
+                        axisNameWidget: Text("Number of Matches Played")
+                      )
+                    ),
+                    gridData: FlGridData(
+                      verticalInterval: 1
+                    )
+                  )
+                ),
+              )
+            ],
           )
         ] else if (graphData && widget.allianceMode) ... [
-          SizedBox(
-            // width: 400,
-            width: MediaQuery.of(context).size.width * .85,
-            height: MediaQuery.of(context).size.height * .55,
-            child: Chart(
-              key: ValueKey(widget.team1 + widget.team2 + widget.team3 + widget.team4 + widget.team5 + widget.team6),
-              data: [
-                { 'teamNum': '${widget.team1}', operation: performStatisticalOperation(widget.team1) },
-                { 'teamNum': '${widget.team2}', operation: performStatisticalOperation(widget.team2) },
-                { 'teamNum': '${widget.team3}', operation: performStatisticalOperation(widget.team3) },
-                { 'teamNum': '${widget.team4}', operation: performStatisticalOperation(widget.team4) },
-                { 'teamNum': '${widget.team5}', operation: performStatisticalOperation(widget.team5) },
-                { 'teamNum': '${widget.team6}', operation: performStatisticalOperation(widget.team6) },
-              ], 
-              variables: {
-                "teamNum": Variable(
-                  accessor: (Map map) => map['teamNum'] as String,
-                ),
-                operation: Variable(
-                  accessor: (Map map) => map[operation] as num,
-                  scale: LinearScale(min: 0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                // width: 400,
+                width: MediaQuery.of(context).size.width * .7,
+                height: MediaQuery.of(context).size.height * .55,
+                child: Chart(
+                  key: ValueKey(widget.team1 + widget.team2 + widget.team3 + widget.team4 + widget.team5 + widget.team6),
+                  data: [
+                    { 'teamNum': '${widget.team1}', operation: performStatisticalOperation(widget.team1) },
+                    { 'teamNum': '${widget.team2}', operation: performStatisticalOperation(widget.team2) },
+                    { 'teamNum': '${widget.team3}', operation: performStatisticalOperation(widget.team3) },
+                    { 'teamNum': '${widget.team4}', operation: performStatisticalOperation(widget.team4) },
+                    { 'teamNum': '${widget.team5}', operation: performStatisticalOperation(widget.team5) },
+                    { 'teamNum': '${widget.team6}', operation: performStatisticalOperation(widget.team6) },
+                  ], 
+                  variables: {
+                    "teamNum": Variable(
+                      accessor: (Map map) => map['teamNum'] as String,
+                    ),
+                    operation: Variable(
+                      accessor: (Map map) => map[operation] as num,
+                      scale: LinearScale(min: 0),
+                    )
+                  },
+                  marks: [IntervalMark()],
+                  axes: [
+                    Defaults.horizontalAxis,
+                    Defaults.verticalAxis,
+                  ]
                 )
-              },
-              marks: [IntervalMark()],
-              axes: [
-                Defaults.horizontalAxis,
-                Defaults.verticalAxis,
-              ]
-            )
+              ),
+              // SizedBox(width: 12),
+              // SizedBox(
+              //   width: MediaQuery.of(context).size.width * .4,
+              //   height: MediaQuery.of(context).size.height * .4,
+              //   child: ,
+              // )
+            ],
           )
         ]
       ],
     );
+  }
+
+  List<ScatterSpot> generateScatterSpots(int team1, int team2) {
+    List<ScatterSpot> list = [];
+    Series data1 = widget.frame[team1]!.column(selectedKey);
+    Series data2 = widget.frame[team2]!.column(selectedKey);
+
+    for (int i = 0; i < data1.length; i++) {
+      if (type == "int" || type == "double") {
+        list.add(
+          ScatterSpot(
+            i + 1.0, 
+            data1.getValue([i]) + 0.0, 
+            dotPainter: FlDotCirclePainter(color: Color.fromARGB(255, 123, 17, 17))
+          )
+        );
+      } else if (type == "string-bool") {
+        list.add(
+          ScatterSpot(
+            i + 1.0, 
+            (data1.getValue([i]) == "TRUE") ? 1.0 : 0.0,
+            dotPainter: FlDotCirclePainter(color: Color.fromARGB(255, 123, 17, 17))
+            )
+          );
+      }
+    }
+    
+    for (int i = 0; i < data2.length; i++) {
+      if (type == "int" || type == "double") {
+        list.add(
+          ScatterSpot(
+            i + 1.0, 
+            data2.getValue([i]) + 0.0, 
+            dotPainter: FlDotCirclePainter(color: Color.fromARGB(255, 35, 52, 207))
+          )
+        );
+      } else if (type == "string-bool") {
+        list.add(
+          ScatterSpot(
+            i + 1.0, 
+            (data2.getValue([i]) == "TRUE") ? 1.0 : 0.0,
+            dotPainter: FlDotCirclePainter(color: Color.fromARGB(255, 35, 52, 207))
+            )
+          );
+      }
+    }
+
+    return list;
   }
 }
 

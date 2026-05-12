@@ -49,13 +49,15 @@ class _DataLibraryState extends State<DataLibrary> {
         
       final intermediary = await FileReader.readCsv(df.path); // Test Library assignment
 
-      setState(() {
-        testLibrary = intermediary;
+      if (mounted) {
+        setState(() {
+          testLibrary = intermediary;
 
-        setLibrary(intermediary);
+          setLibrary(intermediary);
 
-        widget.onDataChanged({widget.name: widget.library[widget.name]});
-      });
+          widget.onDataChanged({widget.name: widget.library[widget.name]});
+        });
+      }
     }
   }
 

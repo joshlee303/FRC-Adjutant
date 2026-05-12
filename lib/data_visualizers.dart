@@ -75,7 +75,7 @@ class _DataVisualizerState extends State<DataVisualizers> {
                 // SizedBox(
                 //   width: double.infinity,
                   child: ColoredBox(
-                    color: (allianceMode) ? Color.fromARGB(255, 123, 17, 17) : Color.fromARGB(187, 58, 116, 3),
+                    color: Color.fromARGB(255, 123, 17, 17),
                     child: DropdownButtonFormField(
                       decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 1"),
                       items: spawnTeams("match"), 
@@ -92,7 +92,7 @@ class _DataVisualizerState extends State<DataVisualizers> {
                 // SizedBox(
                 //   width: double.infinity,
                   child: ColoredBox(
-                    color: (allianceMode) ? Color.fromARGB(255, 123, 17, 17) : Color.fromARGB(187, 58, 116, 3),
+                    color: (allianceMode) ? Color.fromARGB(255, 123, 17, 17) : Color.fromARGB(255, 35, 52, 207),
                     child: DropdownButtonFormField(
                       decoration: InputDecoration(border: const OutlineInputBorder(), labelText: "Team 2"),
                       items: spawnTeams("match"), 
